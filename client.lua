@@ -14,6 +14,7 @@ Citizen.CreateThread(function()
 			end
 			
 			if not IsPauseMenuActive() and wasmenuopen then
+					Wait(1000)
 					ClearPedTasksImmediately(GetPlayerPed(-1))
 					wasmenuopen = false
 			end
