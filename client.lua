@@ -1,22 +1,22 @@
-local wasmenuopen = false
-
----------------------------------------------------------------------------
--- Threads --
----------------------------------------------------------------------------
-
 Citizen.CreateThread(function()
+	local mainMenuOpen = false
+
 	while true do
-			Wait(0)
-			if IsPauseMenuActive() and not wasmenuopen then
-					SetCurrentPedWeapon(GetPlayerPed(-1), 0xA2719263, true) -- set unarmed
-					TaskStartScenarioInPlace(GetPlayerPed(-1), "WORLD_HUMAN_TOURIST_MAP", 0, false) -- Start the scenario
-					wasmenuopen = true
+		local playerPed = GetPlayerPed(-1)
+		
+		if not IsPedInAnyVehicle(playerPed) then
+			if IsPauseMenuActive() and not mainMenuOpen then
+				mainMenuOpen = true
+
+				SetCurrentPedWeapon(playerPed, 0xA2719263, true)
+				TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_TOURIST_MAP", 0, true)
+			elseif mainMenuOpen then
+				Wait(1000)
+				ClearPedTasks(playerPed)
+				mainMenuOpen = false
 			end
-			
-			if not IsPauseMenuActive() and wasmenuopen then
-					Wait(1000)
-					ClearPedTasksImmediately(GetPlayerPed(-1))
-					wasmenuopen = false
-			end
+		end
+
+		Wait(250)
 	end
 end)
